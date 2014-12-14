@@ -55,9 +55,9 @@
         "twig/twig": "~1.8"
     },
     "scripts": {
-        "doc": "sami.php update .sami.php; cd ./build/sami; git add .; git commit -m '`date`'; git push",
-        "lint": "php-cs-fixer fix --config-file .php-cs-fixer.php",
-        "test": "phpunit -c phpunit.xml.dist"
+        "sami": "sami.php update .sami.php; cd ./build/sami; git add .; git commit -m '`date`'; git push",
+        "php-cs-fixer": "php-cs-fixer fix --config-file .php-cs-fixer.php",
+        "phpunit": "phpunit -c phpunit.xml.dist"
     },
     "type": "library"
 }
