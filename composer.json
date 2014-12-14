@@ -15,8 +15,8 @@
     "description": "The standard compliant OAuth2.0 library based on the Symfony Components",
     "extra": {
         "branch-alias": {
-            "dev-develop": "2.x-dev",
-            "dev-master": "2.4.x-dev"
+            "dev-develop": "3.x-dev",
+            "dev-master": "3.0.x-dev"
         }
     },
     "homepage": "https://github.com/authbucket/oauth2-php",
@@ -53,6 +53,11 @@
         "symfony/translation": "~2.3",
         "symfony/twig-bridge": "~2.3",
         "twig/twig": "~1.8"
+    },
+    "scripts": {
+        "doc": "sami.php update .sami.php",
+        "lint": "php-cs-fixer fix --config-file .php-cs-fixer.php",
+        "test": "phpunit -c phpunit.xml.dist"
     },
     "type": "library"
 }
