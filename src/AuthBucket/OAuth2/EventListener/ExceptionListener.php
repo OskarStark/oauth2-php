@@ -12,6 +12,7 @@
 namespace AuthBucket\OAuth2\EventListener;
 
 use AuthBucket\OAuth2\Exception\ExceptionInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,14 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
  */
 class ExceptionListener
 {
+    private $logger;
+
+    public function __construct(
+        LoggerInterface $logger = null
+    ) {
+        $this->logger = $logger;
+    }
+
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
@@ -39,6 +48,14 @@ class ExceptionListener
         ExceptionInterface $exception
     ) {
         $message = unserialize($exception->getMessage());
+
+        if (null !== $this->logger) {
+            $this->logger->debug(sprintf('OAuth2 exception occured by "%s" at line %s: %s',
+                $exception->getFile(),
+                $exception->getLine(),
+                var_export($message, true)
+            ));
+        }
 
         if (isset($message['redirect_uri'])) {
             $redirectUri = $message['redirect_uri'];

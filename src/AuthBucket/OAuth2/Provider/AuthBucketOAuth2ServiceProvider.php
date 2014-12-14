@@ -85,8 +85,10 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, Contr
             'debug_endpoint' => 'AuthBucket\\OAuth2\\ResourceType\\DebugEndpointResourceTypeHandler',
         );
 
-        $app['authbucket_oauth2.exception_listener'] = $app->share(function () {
-            return new ExceptionListener();
+        $app['authbucket_oauth2.exception_listener'] = $app->share(function ($app) {
+            return new ExceptionListener(
+                $app['logger']
+            );
         });
 
         $app['authbucket_oauth2.response_handler.factory'] = $app->share(function ($app) {
