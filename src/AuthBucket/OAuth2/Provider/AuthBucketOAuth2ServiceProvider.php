@@ -178,7 +178,8 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, Contr
                     $name,
                     $app['security'],
                     $app['security.authentication_manager'],
-                    $app['validator']
+                    $app['validator'],
+                    $app['logger']
                 );
             });
         });
@@ -202,6 +203,7 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, Contr
                     $app['security'],
                     $app['security.authentication_manager'],
                     $app['validator'],
+                    $app['logger'],
                     $app['authbucket_oauth2.token_handler.factory']
                 );
             });

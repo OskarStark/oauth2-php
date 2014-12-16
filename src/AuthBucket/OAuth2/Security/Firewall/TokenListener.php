@@ -15,6 +15,7 @@ use AuthBucket\OAuth2\Exception\InvalidRequestException;
 use AuthBucket\OAuth2\Security\Authentication\Token\ClientToken;
 use AuthBucket\OAuth2\Validator\Constraints\ClientId;
 use AuthBucket\OAuth2\Validator\Constraints\ClientSecret;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -34,17 +35,20 @@ class TokenListener implements ListenerInterface
     protected $securityContext;
     protected $authenticationManager;
     protected $validator;
+    protected $logger;
 
     public function __construct(
         $providerKey,
         SecurityContextInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        LoggerInterface $logger
     ) {
         $this->providerKey = $providerKey;
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
     public function handle(GetResponseEvent $event)
@@ -91,6 +95,10 @@ class TokenListener implements ListenerInterface
             throw new InvalidRequestException(array(
                 'error_description' => 'The request includes an invalid parameter value.',
             ));
+        }
+
+        if (null !== $this->logger) {
+            $this->logger->info(sprintf('Token endpoint client credentials found for client_id "%s"', $clientId));
         }
 
         if (null !== $token = $this->securityContext->getToken()) {
