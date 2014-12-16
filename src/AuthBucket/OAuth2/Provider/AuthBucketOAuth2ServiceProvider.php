@@ -28,7 +28,6 @@ use AuthBucket\OAuth2\TokenType\TokenTypeHandlerFactory;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * OAuth2 service provider as plugin for Silex SecurityServiceProvider.
@@ -293,6 +292,6 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, Contr
 
     public function boot(Application $app)
     {
-        $app['dispatcher']->addListener(KernelEvents::EXCEPTION, array($app['authbucket_oauth2.exception_listener'], 'onKernelException'), -8);
+        $app['dispatcher']->addSubscriber($app['authbucket_oauth2.exception_listener']);
     }
 }
