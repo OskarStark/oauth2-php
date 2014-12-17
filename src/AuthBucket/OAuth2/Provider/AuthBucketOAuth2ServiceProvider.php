@@ -26,7 +26,6 @@ use AuthBucket\OAuth2\Security\Firewall\ResourceListener;
 use AuthBucket\OAuth2\Security\Firewall\TokenListener;
 use AuthBucket\OAuth2\TokenType\TokenTypeHandlerFactory;
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 use Silex\ServiceProviderInterface;
 
 /**
@@ -34,7 +33,7 @@ use Silex\ServiceProviderInterface;
  *
  * @author Wong Hoi Sing Edison <hswong3i@pantarei-design.com>
  */
-class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, ControllerProviderInterface
+class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
@@ -248,48 +247,6 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface, Contr
                 'pre_auth',
             );
         });
-    }
-
-    public function connect(Application $app)
-    {
-        $controllers = $app['controllers_factory'];
-
-        $app->get('/api/v1.0/oauth2/authorize', 'authbucket_oauth2.oauth2_controller:authorizeAction')
-            ->bind('api_oauth2_authorize');
-
-        $app->post('/api/v1.0/oauth2/token', 'authbucket_oauth2.oauth2_controller:tokenAction')
-            ->bind('api_oauth2_token');
-
-        $app->match('/api/v1.0/oauth2/debug', 'authbucket_oauth2.oauth2_controller:debugAction')
-            ->bind('api_oauth2_debug')
-            ->method('GET|POST');
-
-        $app->get('/api/v1.0/oauth2/cron', 'authbucket_oauth2.oauth2_controller:cronAction')
-            ->bind('api_oauth2_cron');
-
-        foreach (array('authorize', 'client', 'scope') as $type) {
-            $app->post('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.'.$type.'_controller:createAction')
-                ->bind('api_'.$type.'_create')
-                ->assert('_format', 'json|xml');
-
-            $app->get('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:readAction')
-                ->bind('api_'.$type.'_read')
-                ->assert('_format', 'json|xml');
-
-            $app->put('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:updateAction')
-                ->bind('api_'.$type.'_update')
-                ->assert('_format', 'json|xml');
-
-            $app->delete('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:deleteAction')
-                ->bind('api_'.$type.'_delete')
-                ->assert('_format', 'json|xml');
-
-            $app->get('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.'.$type.'_controller:listAction')
-                ->bind('api_'.$type.'_list')
-                ->assert('_format', 'json|xml');
-        }
-
-        return $controllers;
     }
 
     public function boot(Application $app)

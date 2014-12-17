@@ -27,10 +27,8 @@ $app->register(new Silex\Provider\ValidatorServiceProvider());
 # RememberMeServiceProvider depend on SecurityServiceProvider.
 $app->register(new Silex\Provider\RememberMeServiceProvider());
 
-# Register and mount with same provider.
-$provider = new AuthBucket\OAuth2\Provider\AuthBucketOAuth2ServiceProvider();
-$app->register($provider);
-$app->mount('/', $provider);
+# Register the service provider.
+$app->register(new AuthBucket\OAuth2\Provider\AuthBucketOAuth2ServiceProvider());
 
 # Register the test bundle provider.
 $app->register(new AuthBucket\OAuth2\Tests\TestBundle\TestBundleServiceProvider());
