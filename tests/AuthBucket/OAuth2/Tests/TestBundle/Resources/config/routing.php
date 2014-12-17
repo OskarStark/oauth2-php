@@ -70,9 +70,6 @@ $app->match('/api/v1.0/oauth2/debug', 'authbucket_oauth2.oauth2_controller:debug
     ->bind('api_oauth2_debug')
     ->method('GET|POST');
 
-$app->get('/api/v1.0/oauth2/cron', 'authbucket_oauth2.oauth2_controller:cronAction')
-    ->bind('api_oauth2_cron');
-
 foreach (array('authorize', 'client', 'scope') as $type) {
     $app->post('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.'.$type.'_controller:createAction')
         ->bind('api_'.$type.'_create')
