@@ -15,9 +15,6 @@ $app->get('/', 'authbucket_oauth2.tests.default_controller:indexAction')
 $app->get('/admin/refresh_database', 'authbucket_oauth2.tests.default_controller:adminRefreshDatabaseAction')
     ->bind('admin_refresh_database');
 
-$app->get('/client', 'authbucket_oauth2.tests.client_controller:indexAction')
-    ->bind('client');
-
 $app->get('/demo', 'authbucket_oauth2.tests.demo_controller:indexAction')
     ->bind('demo');
 
@@ -71,23 +68,23 @@ $app->match('/api/v1.0/oauth2/debug', 'authbucket_oauth2.oauth2_controller:debug
     ->method('GET|POST');
 
 foreach (array('authorize', 'client', 'scope') as $type) {
-    $app->post('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.'.$type.'_controller:createAction')
+    $app->post('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.tests.'.$type.'_controller:createAction')
         ->bind('api_'.$type.'_create')
         ->assert('_format', 'json|xml');
 
-    $app->get('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:readAction')
+    $app->get('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.tests.'.$type.'_controller:readAction')
         ->bind('api_'.$type.'_read')
         ->assert('_format', 'json|xml');
 
-    $app->put('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:updateAction')
+    $app->put('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.tests.'.$type.'_controller:updateAction')
         ->bind('api_'.$type.'_update')
         ->assert('_format', 'json|xml');
 
-    $app->delete('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.'.$type.'_controller:deleteAction')
+    $app->delete('/api/v1.0/'.$type.'/{id}.{_format}', 'authbucket_oauth2.tests.'.$type.'_controller:deleteAction')
         ->bind('api_'.$type.'_delete')
         ->assert('_format', 'json|xml');
 
-    $app->get('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.'.$type.'_controller:listAction')
+    $app->get('/api/v1.0/'.$type.'.{_format}', 'authbucket_oauth2.tests.'.$type.'_controller:listAction')
         ->bind('api_'.$type.'_list')
         ->assert('_format', 'json|xml');
 }

@@ -11,10 +11,7 @@
 
 namespace AuthBucket\OAuth2\Provider;
 
-use AuthBucket\OAuth2\Controller\AuthorizeController;
-use AuthBucket\OAuth2\Controller\ClientController;
 use AuthBucket\OAuth2\Controller\OAuth2Controller;
-use AuthBucket\OAuth2\Controller\ScopeController;
 use AuthBucket\OAuth2\EventListener\ExceptionListener;
 use AuthBucket\OAuth2\GrantType\GrantTypeHandlerFactory;
 use AuthBucket\OAuth2\Model\InMemory\ModelManagerFactory;
@@ -135,30 +132,6 @@ class AuthBucketOAuth2ServiceProvider implements ServiceProviderInterface
                 $app['authbucket_oauth2.model_manager.factory'],
                 $app['authbucket_oauth2.response_handler.factory'],
                 $app['authbucket_oauth2.grant_handler.factory']
-            );
-        });
-
-        $app['authbucket_oauth2.authorize_controller'] = $app->share(function () use ($app) {
-            return new AuthorizeController(
-                $app['validator'],
-                $app['serializer'],
-                $app['authbucket_oauth2.model_manager.factory']
-            );
-        });
-
-        $app['authbucket_oauth2.client_controller'] = $app->share(function () use ($app) {
-            return new ClientController(
-                $app['validator'],
-                $app['serializer'],
-                $app['authbucket_oauth2.model_manager.factory']
-            );
-        });
-
-        $app['authbucket_oauth2.scope_controller'] = $app->share(function () use ($app) {
-            return new ScopeController(
-                $app['validator'],
-                $app['serializer'],
-                $app['authbucket_oauth2.model_manager.factory']
             );
         });
 
