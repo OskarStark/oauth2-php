@@ -6,8 +6,62 @@ pre code {
   overflow: auto;
   white-space: pre;
 }
-footer.authbucket-docs-footer {
+aside {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+aside .nav > li > a {
+  color: #777;
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 20px;
+}
+aside .nav > li > a:hover,
+aside .nav > li > a:focus {
+  background-color: transparent;
+  border-left: 1px solid #337ab7;
+  color: #337ab7;
+  padding-left: 19px;
+  text-decoration: none;
+}
+aside .nav > .active > a,
+aside .nav > .active:hover > a,
+aside .nav > .active:focus > a {
+  background-color: transparent;
+  border-left: 2px solid #337ab7;
+  color: #337ab7;
+  font-weight: 700;
+  padding-left: 18px;
+}
+aside .nav .nav {
+  display: none;
+  padding-bottom: 10px;
+}
+aside .nav .active .nav {
+  display: block;
+}
+aside .nav .nav > li > a {
+  font-size: 12px;
+  font-weight: 400;
+  padding-bottom: 1px;
+  padding-left: 30px;
+  padding-top: 1px;
+}
+aside .nav .nav > li > a:hover,
+aside .nav .nav > li > a:focus {
+  padding-left: 29px;
+}
+aside .nav .nav > .active > a,
+aside .nav .nav > .active:hover > a,
+aside .nav .nav > .active:focus > a {
+  display: block;
+  font-weight: 500;
+  padding-left: 28px;
+}
+body > footer {
   border-top: 1px solid #eee;
+  color: #777;
   margin-top: 100px;
   padding-bottom: 40px;
   padding-top: 40px;
