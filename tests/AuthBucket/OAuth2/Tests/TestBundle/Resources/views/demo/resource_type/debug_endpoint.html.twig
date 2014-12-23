@@ -1,25 +1,31 @@
 {% extends 'html.html.twig' %}
 
+{% use 'page.html.twig' %}
+
 {% set head_title = 'Resource Endpoint | AuthBucket\\OAuth2' %}
 
-{% block page %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="page-header">Resource Endpoint <small>(resource_type = debug_endpoint)</small></h1>
-                <blockquote>
-                    <p>The client accesses protected resources by presenting the access token to the resource server.</p>
-                    <footer><a href="http://tools.ietf.org/html/rfc6749#section-7">7. Accessing Protected Resources</a></footer>
-                </blockquote>
-                <p><a class="btn btn-primary" role="button" href="{{ path('demo') }}">Return</a></p>
-                <p><a class="btn btn-primary" role="button" href="{{ path('oauth2_authorize_logout') }}">Logout</a></p>
+{% block main %}
+    <h1 class="page-header">Resource Endpoint <small>(resource_type = debug_endpoint)</small></h1>
+    <blockquote>
+        <p>The client accesses protected resources by presenting the access token to the resource server.</p>
+        <footer><a href="http://tools.ietf.org/html/rfc6749#section-7">7. Accessing Protected Resources</a></footer>
+    </blockquote>
 
-                <h2 class="page-header">Resource Response</h2>
-                {{ dump(resource_response) }}
+    <h2 id="actions" class="page-header">Actions</h2>
+    <p><a class="btn btn-primary" role="button" href="{{ path('demo') }}">Return</a></p>
+    <p><a class="btn btn-primary" role="button" href="{{ path('oauth2_authorize_logout') }}">Logout</a></p>
 
-                <h2 class="page-header">Resource Request</h2>
-                {{ dump(resource_request) }}
-            </div>
-        </div>
-    </div>
+    <h2 id="resource-response" class="page-header">Resource Response</h2>
+    {{ dump(resource_response) }}
+
+    <h2 id="resource-request" class="page-header">Resource Request</h2>
+    {{ dump(resource_request) }}
+{% endblock %}
+
+{% block aside %}
+    <ul class="nav" data-spy="affix">
+        <li><a href="#actions">Actions</a></li>
+        <li><a href="#resource-response">Resource Response</a></li>
+        <li><a href="#resource-request">Resource Request</a></li>
+    </ul>
 {% endblock %}
