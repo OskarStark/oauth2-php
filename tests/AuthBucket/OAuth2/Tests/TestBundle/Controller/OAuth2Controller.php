@@ -17,11 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class OAuth2Controller
 {
-    public function indexAction(Request $request, Application $app)
-    {
-        return $app['twig']->render('oauth2/index.html.twig');
-    }
-
     public function loginAction(Request $request, Application $app)
     {
         $session = $request->getSession();
@@ -30,7 +25,7 @@ class OAuth2Controller
         $_username = $session->get('_username');
         $_password = $session->get('_password');
 
-        return $app['twig']->render('oauth2/login.html.twig', array(
+        return $app['twig']->render('demo/login.html.twig', array(
             'error' => $error,
             '_username' => $_username,
             '_password' => $_password,
@@ -89,7 +84,7 @@ class OAuth2Controller
         // Display the form.
         $authorizationRequest = $request->query->all();
 
-        return $app['twig']->render('oauth2/authorize.html.twig', array(
+        return $app['twig']->render('demo/authorize.html.twig', array(
             'client_id' => $clientId,
             'username' => $username,
             'scopes' => $scope,
