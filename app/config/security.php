@@ -24,8 +24,8 @@ $app['security.user_provider.admin'] = $app['security.user_provider.inmemory._pr
 ));
 
 $app['security.firewalls'] = array(
-    'admin' => array(
-        'pattern' => '^/admin',
+    'demo_refresh_database' => array(
+        'pattern' => '^/demo/refresh_database$',
         'http' => true,
         'users' => $app['security.user_provider.admin'],
     ),

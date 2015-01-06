@@ -15,11 +15,17 @@ $app->get('/', 'authbucket_oauth2.tests.default_controller:indexAction')
 $app->get('/getting-started', 'authbucket_oauth2.tests.default_controller:gettingStartedIndexAction')
     ->bind('getting-started');
 
-$app->get('/admin/refresh_database', 'authbucket_oauth2.tests.default_controller:adminRefreshDatabaseAction')
-    ->bind('admin_refresh_database');
-
 $app->get('/demo', 'authbucket_oauth2.tests.demo_controller:indexAction')
     ->bind('demo');
+
+$app->get('/demo/refresh_database', 'authbucket_oauth2.tests.demo_controller:refreshDatabaseAction')
+    ->bind('demo_refresh_database');
+
+$app->get('/demo/login', 'authbucket_oauth2.tests.demo_controller:loginAction')
+    ->bind('demo_login');
+
+$app->match('/demo/authorize', 'authbucket_oauth2.tests.demo_controller:authorizeAction')
+    ->bind('demo_authorize');
 
 $app->get('/demo/authorize/code', 'authbucket_oauth2.tests.demo_controller:authorizeCodeAction')
     ->bind('demo_authorize_code');
@@ -50,12 +56,6 @@ $app->get('/demo/resource_type/model', 'authbucket_oauth2.tests.demo_controller:
 
 $app->get('/demo/resource_type/debug_endpoint', 'authbucket_oauth2.tests.demo_controller:resourceTypeDebugEndpointAction')
     ->bind('demo_resource_type_debug_endpoint');
-
-$app->get('/demo/login', 'authbucket_oauth2.tests.oauth2_controller:loginAction')
-    ->bind('demo_login');
-
-$app->match('/demo/authorize', 'authbucket_oauth2.tests.oauth2_controller:authorizeAction')
-    ->bind('demo_authorize');
 
 $app->get('/api/v1.0/oauth2/authorize', 'authbucket_oauth2.oauth2_controller:authorizeAction')
     ->bind('api_oauth2_authorize');

@@ -11,6 +11,12 @@
 
 namespace AuthBucket\OAuth2\Tests\TestBundle\Controller;
 
+use AuthBucket\OAuth2\Exception\InvalidScopeException;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\Persistence\PersistentObject;
+use Doctrine\ORM\Tools\SchemaTool;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Client;
@@ -20,6 +26,118 @@ class DemoController
     public function indexAction(Request $request, Application $app)
     {
         return $app['twig']->render('demo/index.html.twig');
+    }
+
+    public function refreshDatabaseAction(Request $request, Application $app)
+    {
+        $conn = $app['db'];
+        $em = $app['doctrine.orm.entity_manager'];
+
+        $params = $conn->getParams();
+        $name = isset($params['path']) ? $params['path'] : (isset($params['dbname']) ? $params['dbname'] : false);
+
+        try {
+            $conn->getSchemaManager()->dropDatabase($name);
+            $conn->getSchemaManager()->createDatabase($name);
+            $conn->close();
+        } catch (\Exception $e) {
+            return 1;
+        }
+
+        $classes = array();
+        foreach ($app['authbucket_oauth2.model'] as $class) {
+            $classes[] = $em->getClassMetadata($class);
+        }
+
+        PersistentObject::setObjectManager($em);
+        $tool = new SchemaTool($em);
+        $tool->dropSchema($classes);
+        $tool->createSchema($classes);
+
+        $purger = new ORMPurger();
+        $executor = new ORMExecutor($em, $purger);
+
+        $loader = new Loader();
+        $loader->loadFromDirectory(__DIR__.'/../DataFixtures/ORM');
+        $executor->execute($loader->getFixtures());
+
+        return $app->redirect($app['url_generator']->generate('index'));
+    }
+
+    public function loginAction(Request $request, Application $app)
+    {
+        $session = $request->getSession();
+
+        $error = $app['security.last_error']($request);
+        $_username = $session->get('_username');
+        $_password = $session->get('_password');
+
+        return $app['twig']->render('demo/login.html.twig', array(
+            'error' => $error,
+            '_username' => $_username,
+            '_password' => $_password,
+        ));
+    }
+
+    public function authorizeAction(Request $request, Application $app)
+    {
+        // We only handle non-authorized scope here.
+        try {
+            return $app['authbucket_oauth2.oauth2_controller']->authorizeAction($request);
+        } catch (InvalidScopeException $exception) {
+            $message = unserialize($exception->getMessage());
+            if ($message['error_description'] !== 'The requested scope is invalid.') {
+                throw $exception;
+            }
+        }
+
+        // Fetch parameters, which already checked.
+        $clientId = $request->query->get('client_id');
+        $username = $app['security']->getToken()->getUser()->getUsername();
+        $scope = preg_split('/\s+/', $request->query->get('scope', ''));
+
+        // Create form.
+        $form = $app['form.factory']->createBuilder('form')->getForm();
+        $form->handleRequest($request);
+
+        // Save authorized scope if submitted by POST.
+        if ($form->isValid()) {
+            $modelManagerFactory = $app['authbucket_oauth2.model_manager.factory'];
+            $authorizeManager = $modelManagerFactory->getModelManager('authorize');
+
+            // Update existing authorization if possible, else create new.
+            $authorize = $authorizeManager->readModelOneBy(array(
+                'clientId' => $clientId,
+                'username' => $username,
+            ));
+            if ($authorize === null) {
+                $class = $authorizeManager->getClassName();
+                $authorize = new $class();
+                $authorize->setClientId($clientId)
+                    ->setUsername($username)
+                    ->setScope((array) $scope);
+                $authorize = $authorizeManager->createModel($authorize);
+            } else {
+                $authorize->setClientId($clientId)
+                    ->setUsername($username)
+                    ->setScope(array_merge((array) $authorize->getScope(), $scope));
+                $authorizeManager->updateModel($authorize);
+            }
+
+            // Back to this path, with original GET parameters.
+            return $app->redirect($request->getRequestUri());
+        }
+
+        // Display the form.
+        $authorizationRequest = $request->query->all();
+
+        return $app['twig']->render('demo/authorize.html.twig', array(
+            'client_id' => $clientId,
+            'username' => $username,
+            'scopes' => $scope,
+            'form' => $form->createView(),
+            'authorization_request' => $authorizationRequest,
+        ));
     }
 
     public function authorizeCodeAction(Request $request, Application $app)
