@@ -7,9 +7,9 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "AuthBucket\\OAuth2": "src/",
-            "AuthBucket\\OAuth2\\Tests": "tests/"
+        "psr-4": {
+            "AuthBucket\\OAuth2\\": "src/",
+            "AuthBucket\\OAuth2\\Tests\\": "tests/"
         }
     },
     "description": "The standard compliant OAuth2.0 library based on the Symfony Components",
