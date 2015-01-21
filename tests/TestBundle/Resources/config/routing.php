@@ -15,6 +15,9 @@ $app->get('/', 'authbucket_oauth2.tests.default_controller:indexAction')
 $app->get('/getting-started', 'authbucket_oauth2.tests.default_controller:gettingStartedIndexAction')
     ->bind('getting-started');
 
+$app->get('/api', 'authbucket_oauth2.tests.default_controller:apiIndexAction')
+    ->bind('api');
+
 $app->get('/demo', 'authbucket_oauth2.tests.demo_controller:indexAction')
     ->bind('demo');
 

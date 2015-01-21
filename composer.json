@@ -58,7 +58,7 @@
         "coveralls": "coveralls -v; exit 0",
         "php-cs-fixer": "php-cs-fixer fix --config-file .php-cs-fixer.php; exit 0",
         "phpunit": "rm -rf app/cache/*/*; phpunit -c phpunit.xml.dist; exit 0",
-        "sami": "sami.php update .sami.php; cd build/sami; git add .; git commit -m '`date`'; git push; exit 0"
+        "sami": "sami.php update .sami.php; exit 0"
     },
     "type": "library"
 }

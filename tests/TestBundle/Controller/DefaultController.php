@@ -25,4 +25,9 @@ class DefaultController
     {
         return $app['twig']->render('getting-started/index.html.twig');
     }
+
+    public function apiIndexAction(Request $request, Application $app)
+    {
+        return $app['twig']->render('api/index.html.twig');
+    }
 }
